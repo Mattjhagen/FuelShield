@@ -33,6 +33,7 @@ const currency = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
+const WAITLIST_ENDPOINT = "https://formsubmit.co/ajax/mattjhagen@ymail.com";
 function App() {
   const [pumpPrice, setPumpPrice] = useState("4.65");
   const [protectedPrice, setProtectedPrice] = useState("3.50");
@@ -46,6 +47,9 @@ function App() {
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const estimate = useMemo(() => {
     const pump = Math.max(parseFloat(pumpPrice) || 0, 0);
     const protectedRate = Math.max(parseFloat(protectedPrice) || 0, 0);
@@ -71,6 +75,8 @@ function App() {
       [name]: ""
     }));
     setSubmitted(false);
+    setSubmitError("");
+    setSubmitMessage("");
   }
   function validateWaitlist() {
     const nextErrors = {};
@@ -94,10 +100,12 @@ function App() {
     }
     return nextErrors;
   }
-  function submitWaitlist(event) {
+  async function submitWaitlist(event) {
     event.preventDefault();
     const nextErrors = validateWaitlist();
     setErrors(nextErrors);
+    setSubmitError("");
+    setSubmitMessage("");
     if (Object.keys(nextErrors).length > 0) {
       setSubmitted(false);
       return;
@@ -107,7 +115,37 @@ function App() {
       createdAt: new Date().toISOString()
     };
     localStorage.setItem("fuelshield.waitlist", JSON.stringify(entry));
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(WAITLIST_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          zip: form.zip.trim(),
+          monthly_gallons: form.gallons,
+          preferred_plan: form.plan,
+          source: "fuelshield.xyz",
+          _subject: "New FuelShield early access request",
+          _template: "table",
+          _captcha: "false"
+        })
+      });
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+      setSubmitted(true);
+      setSubmitMessage("You're on the list. Check your inbox for any confirmation email, and we'll follow up when early access opens.");
+    } catch (error) {
+      setSubmitted(false);
+      setSubmitError("We saved this request in your browser, but could not send it yet. Email mattjhagen@ymail.com or try again in a minute.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
   return React.createElement("div", {
     className: "min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(54,226,143,0.18),transparent_34rem),radial-gradient(circle_at_top_right,rgba(58,184,255,0.16),transparent_30rem),linear-gradient(180deg,#071018_0%,#08131d_42%,#050b12_100%)]"
@@ -128,6 +166,9 @@ function App() {
     form: form,
     errors: errors,
     submitted: submitted,
+    isSubmitting: isSubmitting,
+    submitMessage: submitMessage,
+    submitError: submitError,
     updateField: updateField,
     submitWaitlist: submitWaitlist
   })), React.createElement("footer", {
@@ -419,6 +460,9 @@ function Waitlist({
   form,
   errors,
   submitted,
+  isSubmitting,
+  submitMessage,
+  submitError,
   updateField,
   submitWaitlist
 }) {
@@ -437,17 +481,33 @@ function Waitlist({
     className: "text-4xl font-black leading-tight text-white lg:text-5xl"
   }, "Make fuel costs predictable."), React.createElement("p", {
     className: "mt-4 text-slate-300"
-  }, "Join the FuelShield waitlist and tell us how much you usually drive. This demo validates locally and stores your entry in this browser only."), React.createElement("div", {
+  }, "Join the FuelShield waitlist and tell us how much you usually drive. We will use your plan preference and monthly gallons to prioritize early access invites."), React.createElement("div", {
     className: "mt-7 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300"
   }, React.createElement("strong", {
     className: "block text-white"
-  }, "Local demo behavior"), "No data is sent to a server. A successful entry is saved to localStorage as ", React.createElement("span", {
-    className: "font-mono text-shield-mint"
-  }, "fuelshield.waitlist"), ".")), React.createElement("form", {
+  }, "Early access routing"), "Valid requests are sent securely through the waitlist form endpoint and backed up locally in this browser.")), React.createElement("form", {
     className: "grid gap-4",
+    action: WAITLIST_ENDPOINT,
+    method: "POST",
     onSubmit: submitWaitlist,
     noValidate: true
-  }, React.createElement(TextInput, {
+  }, React.createElement("input", {
+    type: "hidden",
+    name: "_subject",
+    value: "New FuelShield early access request"
+  }), React.createElement("input", {
+    type: "hidden",
+    name: "_template",
+    value: "table"
+  }), React.createElement("input", {
+    type: "hidden",
+    name: "_captcha",
+    value: "false"
+  }), React.createElement("input", {
+    type: "hidden",
+    name: "source",
+    value: "fuelshield.xyz"
+  }), React.createElement(TextInput, {
     id: "name",
     name: "name",
     label: "Full name",
@@ -508,11 +568,19 @@ function Waitlist({
     className: "mt-2 text-sm font-semibold text-red-300"
   }, errors.plan)), React.createElement("button", {
     type: "submit",
-    className: "mt-2 rounded-full bg-gradient-to-r from-shield-mint to-emerald-300 px-6 py-4 font-black text-slate-950 shadow-glow transition hover:-translate-y-0.5"
-  }, "Request Early Access"), submitted && React.createElement("p", {
+    disabled: isSubmitting,
+    className: "mt-2 rounded-full px-6 py-4 font-black shadow-glow transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60",
+    style: {
+      background: "linear-gradient(135deg, #36e28f, #75f7bd)",
+      color: "#04110c"
+    }
+  }, isSubmitting ? "Sending..." : "Request Early Access"), submitted && React.createElement("p", {
     className: "rounded-2xl border border-shield-mint/35 bg-shield-mint/10 p-4 text-sm font-semibold text-emerald-100",
     role: "status"
-  }, "You're on the list. FuelShield saved this waitlist entry locally for the demo."))));
+  }, submitMessage), submitError && React.createElement("p", {
+    className: "rounded-2xl border border-red-400/35 bg-red-500/10 p-4 text-sm font-semibold text-red-100",
+    role: "alert"
+  }, submitError))));
 }
 function TextInput({
   id,

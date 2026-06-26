@@ -1,0 +1,168 @@
+      color: var(--green);
+      font-size: clamp(2.3rem, 6vw, 4.4rem);
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .output-detail {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .footer-cta {
+      padding: 80px 0 36px;
+    }
+
+    .footer-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px;
+      border: 1px solid rgba(54, 226, 143, 0.24);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(54, 226, 143, 0.13), rgba(58, 184, 255, 0.11)),
+        rgba(16, 30, 45, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .footer-panel h2 {
+      margin-bottom: 8px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+    }
+
+    .footer-panel p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      padding-bottom: 32px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+    }
+
+    @media (max-width: 940px) {
+      .nav {
+        min-height: auto;
+        padding: 18px 0;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 62px;
+      }
+
+      .hero-grid,
+      .protocol-layout,
+      .calculator {
+        grid-template-columns: 1fr;
+      }
+
+      .card-stage {
+        min-height: 390px;
+      }
+
+      .floating-note {
+        right: 18px;
+      }
+
+      .card-grid,
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .protocol-list,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 28px, var(--max));
+      }
+
+      .nav .btn {
+        display: none;
+      }
+
+      .hero-proof {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .proof-item:last-child {
+        border-bottom: 0;
+      }
+
+      .fuel-card {
+        padding: 22px;
+        border-radius: 24px;
+        transform: rotate(-2deg);
+      }
+
+      .card-number {
+        margin: 34px 0 22px;
+        letter-spacing: 2px;
+      }
+
+      .floating-note {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        max-width: 100%;
+        margin-top: -20px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .calculator,
+      .protocol-panel,
+      .footer-panel {
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+      .footer-panel,
+      .footer-meta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }

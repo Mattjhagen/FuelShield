@@ -1,0 +1,166 @@
+              <li>90% monthly card-use requirement</li>
+            </ul>
+            <a class="btn btn-primary" href="#calculator">Estimate Silver</a>
+          </article>
+          <article class="plan-card">
+            <h3>Gold</h3>
+            <div class="price">$89<span>/mo</span></div>
+            <ul class="features">
+              <li>125 protected gallons/month</li>
+              <li>Protection above $3.25/gal</li>
+              <li>Priority account review</li>
+            </ul>
+            <a class="btn btn-secondary" href="#calculator">Estimate Gold</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="protocol" aria-labelledby="protocol-title">
+      <div class="shell protocol-layout">
+        <div class="protocol-panel">
+          <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>Fair-use protocol</p>
+          <h2 id="protocol-title">Protection works when card usage is verifiable.</h2>
+          <p>FuelShield prevents misuse by tying protection to verified Fuel Card transactions. That keeps plan pricing fair for drivers who use the service as intended.</p>
+        </div>
+        <div class="protocol-list">
+          <div class="protocol-item">
+            <strong>Fuel Card required</strong>
+            <span>Covered fuel must be purchased with the issued FuelShield card for the transaction to qualify.</span>
+          </div>
+          <div class="protocol-item">
+            <strong>Monthly usage threshold</strong>
+            <span>Plans may require a minimum share of monthly fuel purchases to run through the card.</span>
+          </div>
+          <div class="protocol-item">
+            <strong>Suspension for misuse</strong>
+            <span>Repeatedly fueling with another payment method or missing required usage can suspend protection.</span>
+          </div>
+          <div class="protocol-item">
+            <strong>Reimbursements are capped</strong>
+            <span>Protection applies only to eligible gallons within the included monthly allowance.</span>
+          </div>
+          <div class="protocol-item">
+            <strong>Extra gallons are market price</strong>
+            <span>Gallons beyond the plan allowance are billed at pump price or receive no protection.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calculator-section" id="calculator" aria-labelledby="calculator-title">
+      <div class="shell">
+        <div class="section-heading">
+          <h2 id="calculator-title">Savings calculator</h2>
+          <p>Estimate monthly protection using your pump price, plan protected price, and covered gallons.</p>
+        </div>
+        <form class="calculator" aria-describedby="calculator-help">
+          <div>
+            <div class="input-grid">
+              <div class="field">
+                <label for="pump-price">Pump price per gallon</label>
+                <input id="pump-price" name="pump-price" type="number" min="0" step="0.01" inputmode="decimal" value="4.65">
+              </div>
+              <div class="field">
+                <label for="protected-price">Protected price per gallon</label>
+                <input id="protected-price" name="protected-price" type="number" min="0" step="0.01" inputmode="decimal" value="3.50">
+              </div>
+              <div class="field">
+                <label for="covered-gallons">Covered gallons</label>
+                <input id="covered-gallons" name="covered-gallons" type="number" min="0" step="1" inputmode="numeric" value="75">
+              </div>
+            </div>
+            <p class="calc-note" id="calculator-help">Formula: max(pump price - protected price, 0) x covered gallons. Actual reimbursements depend on eligibility, card usage, and your monthly cap.</p>
+          </div>
+          <output class="calc-output" for="pump-price protected-price covered-gallons">
+            <span class="output-label">Estimated monthly protection</span>
+            <span class="output-value" id="protection-output">$86.25</span>
+            <span class="output-detail" id="protection-detail">$1.15 protected spread across 75 gallons</span>
+          </output>
+        </form>
+      </div>
+    </section>
+
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="shell">
+        <div class="section-heading">
+          <h2 id="faq-title">FAQ</h2>
+          <p>Clear rules help drivers understand exactly when protection applies and where the monthly limits are.</p>
+        </div>
+        <div class="faq-grid">
+          <article class="faq-item">
+            <h3>What happens if gas is below my protected price?</h3>
+            <p>You simply pay the lower pump price. Reimbursements only apply when the eligible pump price is above your plan's protected price.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What if I exceed my gallon allowance?</h3>
+            <p>Your plan protection stops at the included gallons. Extra gallons are billed at market price or receive no protection.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Why require the Fuel Card every time?</h3>
+            <p>The card verifies price, location, gallons, and usage. That transaction data is how FuelShield confirms coverage and prevents misuse.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Can protection be suspended?</h3>
+            <p>Yes. Missing required card usage or repeatedly using another payment method for covered fuel can suspend protection until the account is reviewed.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer-cta" aria-labelledby="footer-cta-title">
+      <div class="shell footer-panel">
+        <div>
+          <h2 id="footer-cta-title">Make fuel costs predictable.</h2>
+          <p>Join early access and get notified when FuelShield opens new driver plans in your area.</p>
+        </div>
+        <a class="btn btn-primary" href="mailto:earlyaccess@fuelshield.example?subject=FuelShield%20Early%20Access">Request Early Access</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-meta">
+      <span>FuelShield</span>
+      <span>Gas price protection subscriptions for predictable monthly driving costs.</span>
+    </div>
+  </footer>
+
+  <script>
+    const pumpPriceInput = document.getElementById("pump-price");
+    const protectedPriceInput = document.getElementById("protected-price");
+    const coveredGallonsInput = document.getElementById("covered-gallons");
+    const protectionOutput = document.getElementById("protection-output");
+    const protectionDetail = document.getElementById("protection-detail");
+
+    const currency = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    function readNumber(input) {
+      const value = Number.parseFloat(input.value);
+      return Number.isFinite(value) && value > 0 ? value : 0;
+    }
+
+    function updateProtectionEstimate() {
+      const pumpPrice = readNumber(pumpPriceInput);
+      const protectedPrice = readNumber(protectedPriceInput);
+      const gallons = readNumber(coveredGallonsInput);
+      const spread = Math.max(pumpPrice - protectedPrice, 0);
+      const estimate = spread * gallons;
+
+      protectionOutput.textContent = currency.format(estimate);
+      protectionDetail.textContent = `${currency.format(spread)} protected spread across ${gallons.toLocaleString("en-US")} gallons`;
+    }
+
+    [pumpPriceInput, protectedPriceInput, coveredGallonsInput].forEach((input) => {
+      input.addEventListener("input", updateProtectionEstimate);
+    });
+
+    updateProtectionEstimate();
+  </script>
+</body>
+</html>

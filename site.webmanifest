@@ -1,0 +1,17 @@
+{
+  "name": "FuelShield",
+  "short_name": "FuelShield",
+  "description": "Gas price protection subscriptions for predictable monthly driving costs.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#071018",
+  "theme_color": "#36e28f",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
